@@ -38,6 +38,9 @@
             {x: 160, y:200}
             ]
 
+        //True if changing direction
+        let changing_direction = false; 
+
         // Horizontal Velocity
         let dx = 10; 
 
@@ -52,6 +55,11 @@
 
         //main function called repeatedly
         function main() {
+
+            // TODO : GAME ENDING (hasGameEnded())
+
+            changing_direction = false;
+
             setTimeout(function onTick() {
                 clearCanvas();
                 moveSnake();
@@ -100,6 +108,27 @@
             snake.pop();
         }
 
+
+        // GAME ENDINGS ?
+        // Head of snake collides with body 
+        // head of snake collides with canvas boundary
+
+        function hasGameEnded()
+        {
+            for (let i = 4; i < snake.length; i++){
+                if(snake[i].x === snake [0].x && snake[i].y === snake[0].y)
+                {
+                    return true;
+                }
+            }           
+            const hitLeftWall = snake[0].x < 0;
+            const hitRightWall = snake[0].x > snakeboard.width - 10;
+            const hitTopWall = snake[0].y > 0;
+            const hitBottomWall = snake[0].y > snakeboard.height - 10; 
+
+            return hitLeftWall || hitRightWall || hitTopWall || hitBottomWall;
+        }
+
         //Movement with keyboard
 
         function changeDirection(event)
@@ -108,6 +137,10 @@
             const RIGHT_KEY = 39;
             const UP_KEY = 38;
             const DOWN_KEY = 40;
+
+            //prevent snake from reversing
+            if (changing_direction) return;
+                changing_direction = true;
 
             const keyPressed = event.keyCode;
             const goingUp = dy === -10; 
